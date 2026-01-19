@@ -82,13 +82,31 @@ You can adapt this process for any project.
 
 **Tip:** Set a spending limit (e.g., $20) to avoid surprises.
 
+### What Claude Desktop Can and Cannot Do
+
+Throughout this tutorial, you'll see two types of steps:
+
+| Icon | Meaning |
+|------|---------|
+| 🤖 | **Claude Desktop can do this** — Copy the provided prompt into Claude Desktop |
+| 👤 | **Human required** — You must do this manually (account creation, authentication, etc.) |
+
+Claude Desktop cannot perform steps that require:
+- Creating accounts (CAPTCHA, email verification)
+- Entering payment information
+- OAuth authorization flows
+- Installing desktop applications (macOS permission dialogs)
+- Running interactive Docker sessions
+
 ---
 
 ## Prerequisites Setup
 
 ### Step 1: Install Homebrew
 
-Homebrew is the package manager for macOS. If you don't have it:
+👤 **Human Required**
+
+Homebrew is the package manager for macOS. Open Terminal and run:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -108,37 +126,45 @@ brew --version
 # Homebrew 4.x.x
 ```
 
-### Step 2: Install Node.js
+*Note: Claude Desktop cannot run this because it requires interactive Terminal input and may prompt for your password.*
 
-Claude Code requires Node.js 18 or later.
+---
 
-```bash
-# Install Node.js via Homebrew
-brew install node
+### Step 2: Install Node.js and Git
 
-# Verify installation
-node --version
-# v20.x.x or higher
+🤖 **Claude Desktop Can Do This**
 
-npm --version
-# 10.x.x or higher
+Copy and paste this prompt into Claude Desktop:
+
 ```
+Install Node.js and Git on my Mac using Homebrew. After installation, verify both are working by checking their versions. Show me the output of the version checks.
+```
+
+**What this does:**
+- Runs `brew install node git`
+- Verifies with `node --version` and `git --version`
+
+---
 
 ### Step 3: Install Claude Code CLI
 
-Claude Code is Anthropic's command-line tool for agentic coding.
+🤖 **Claude Desktop Can Do This**
 
-```bash
-# Install globally via npm
-npm install -g @anthropic-ai/claude-code
+Copy and paste this prompt into Claude Desktop:
 
-# Verify installation
-claude --version
 ```
+Install the Claude Code CLI globally using npm. After installation, verify it's working by checking the version. Show me the output.
+```
+
+**What this does:**
+- Runs `npm install -g @anthropic-ai/claude-code`
+- Verifies with `claude --version`
+
+---
 
 ### Step 4: Create Anthropic Account and Get API Key
 
-You need an Anthropic API key to use Claude.
+👤 **Human Required**
 
 **Create Account:**
 1. Go to [console.anthropic.com](https://console.anthropic.com)
@@ -153,54 +179,58 @@ You need an Anthropic API key to use Claude.
 3. Give it a name like "Ralph on Mac"
 4. Copy the key (starts with `sk-ant-`)—you won't see it again
 
-**Set the API Key:**
-
-```bash
-# Add to your shell profile for persistence
-echo 'export ANTHROPIC_API_KEY="sk-ant-your-key-here"' >> ~/.zshrc
-source ~/.zshrc
-
-# Verify it's set
-echo $ANTHROPIC_API_KEY
-# sk-ant-your-key-here
-```
-
 **Set a Spending Limit (Recommended):**
 1. In console.anthropic.com, go to **Settings** → **Limits**
 2. Set a monthly limit (e.g., $20 or $50)
 3. Enable email alerts for usage thresholds
 
-**Test Claude Code:**
+*Note: Claude Desktop cannot create accounts or access authenticated dashboards.*
 
-```bash
-claude -p "Say hello in exactly 5 words"
-# Hello there, how are you?
+---
+
+### Step 5: Set API Key in Shell
+
+🤖 **Claude Desktop Can Do This**
+
+Copy and paste this prompt into Claude Desktop (replace `YOUR_API_KEY` with your actual key):
+
+```
+Add my Anthropic API key to my shell configuration so it persists across terminal sessions. My API key is: sk-ant-xxxxx (replace with actual key)
+
+Add it to ~/.zshrc and reload the shell configuration. Then verify the key is set by echoing the first 15 characters (for security, don't show the full key).
 ```
 
-### Step 5: Install Git
+**What this does:**
+- Adds `export ANTHROPIC_API_KEY="sk-ant-..."` to `~/.zshrc`
+- Runs `source ~/.zshrc`
+- Verifies with a partial echo
 
-Git is essential for Ralph's commit-per-task workflow.
+---
 
-```bash
-# Install via Homebrew
-brew install git
+### Step 6: Configure Git Identity
 
-# Verify
-git --version
-# git version 2.x.x
+🤖 **Claude Desktop Can Do This**
+
+Copy and paste this prompt into Claude Desktop (replace with your info):
+
+```
+Configure Git with my identity:
+- Name: Your Full Name
+- Email: your.email@example.com
+
+Also enable the macOS Keychain credential helper so Git remembers my GitHub credentials. Show me the final git config to confirm.
 ```
 
-**Configure Git identity:**
+**What this does:**
+- Runs `git config --global user.name "..."`
+- Runs `git config --global user.email "..."`
+- Runs `git config --global credential.helper osxkeychain`
 
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
+---
 
-# Verify
-git config --global --list
-```
+### Step 7: Create GitHub Account
 
-### Step 6: Create GitHub Account
+👤 **Human Required**
 
 If you don't have a GitHub account:
 
@@ -212,7 +242,13 @@ If you don't have a GitHub account:
 6. Complete the verification puzzle
 7. Confirm your email address
 
-### Step 7: Configure Git Authentication for GitHub
+*Note: Claude Desktop cannot create accounts due to CAPTCHA and email verification.*
+
+---
+
+### Step 8: Create GitHub Personal Access Token
+
+👤 **Human Required**
 
 GitHub no longer accepts passwords for Git operations. You need a Personal Access Token:
 
@@ -226,198 +262,210 @@ GitHub no longer accepts passwords for Git operations. You need a Personal Acces
 8. Click **Generate token**
 9. **Copy the token immediately**—you won't see it again
 
-**Save the token in Git's credential helper:**
+**Save this token somewhere safe** — you'll need it when pushing to GitHub for the first time.
 
-```bash
-# Enable credential storage (macOS Keychain)
-git config --global credential.helper osxkeychain
-```
+*Note: Claude Desktop cannot access GitHub's authenticated settings pages.*
 
-The next time you push to GitHub, enter:
-- **Username:** your GitHub username
-- **Password:** paste your Personal Access Token (not your GitHub password)
+---
 
-macOS Keychain will remember it for future use.
+### Step 9: Install Docker Desktop
 
-### Step 8: Install Docker Desktop
-
-Ralph requires `--dangerously-skip-permissions` which bypasses all safety prompts. **Always run Ralph in a sandboxed environment.**
-
-**Install Docker Desktop:**
+👤 **Human Required**
 
 1. Download from [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
 2. Open the `.dmg` file
 3. Drag Docker to Applications
 4. Launch Docker from Applications
-5. Complete the setup wizard (you can skip signing in)
-6. Wait for Docker to start (whale icon appears in menu bar)
+5. **Approve the macOS permission dialogs** (this is why Claude can't do it)
+6. Complete the setup wizard (you can skip signing in)
+7. Wait for Docker to start (whale icon appears in menu bar)
 
-**Verify Docker:**
-
+Verify Docker:
 ```bash
 docker --version
-# Docker version 24.x.x
-
 docker run hello-world
-# Hello from Docker!
 ```
 
-### Step 9: Create the Ralph Docker Image
+*Note: Claude Desktop cannot install .dmg files or approve macOS security dialogs.*
 
-Create a sandboxed environment for Ralph:
+---
 
-```bash
-# Create a directory for the Docker setup
-mkdir -p ~/ralph-docker
-cd ~/ralph-docker
+### Step 10: Create the Ralph Docker Image
 
-# Create the Dockerfile
-cat > Dockerfile << 'EOF'
-FROM ubuntu:24.04
+🤖 **Claude Desktop Can Do This**
 
-# Prevent interactive prompts during installation
-ENV DEBIAN_FRONTEND=noninteractive
+Copy and paste this prompt into Claude Desktop:
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    ca-certificates \
-    gnupg \
-    && rm -rf /var/lib/apt/lists/*
+```
+Create a Docker image for the Ralph Wiggum development sandbox. 
 
-# Install Node.js 20.x
-RUN mkdir -p /etc/apt/keyrings \
-    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
-    && apt-get update \
-    && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/*
+Create a directory at ~/ralph-docker and inside it create a Dockerfile with these specifications:
+- Base image: ubuntu:24.04
+- Install: curl, git, ca-certificates, gnupg
+- Install Node.js 20.x from NodeSource
+- Install globally via npm: @anthropic-ai/claude-code, serve, eslint, prettier
+- Create a non-root user called "ralph"
+- Set working directory to /workspace
+- Configure git with name "Ralph Wiggum" and email "ralph@example.com"
+- Set default branch to main
 
-# Install Claude Code CLI
-RUN npm install -g @anthropic-ai/claude-code
-
-# Install useful development tools
-RUN npm install -g serve eslint prettier
-
-# Create non-root user for safety
-RUN useradd -m -s /bin/bash ralph
-USER ralph
-
-# Set working directory
-WORKDIR /workspace
-
-# Configure git for commits inside container
-RUN git config --global user.name "Ralph Wiggum" \
-    && git config --global user.email "ralph@example.com" \
-    && git config --global init.defaultBranch main
-
-# Default command
-CMD ["/bin/bash"]
-EOF
-
-# Build the image (takes 2-5 minutes)
-docker build -t ralph-sandbox .
+After creating the Dockerfile, build the image with the tag "ralph-sandbox". Show me the build output and confirm success.
 ```
 
-You'll see "Successfully built" when done.
+**What this does:**
+- Creates `~/ralph-docker/Dockerfile`
+- Runs `docker build -t ralph-sandbox .`
 
-### Step 10: Verify Everything Works
+---
 
-Create and run a verification script:
+### Step 11: Verify All Prerequisites
 
-```bash
-cat > ~/check-ralph-prereqs.sh << 'EOF'
-#!/bin/bash
+🤖 **Claude Desktop Can Do This**
 
-echo "═══════════════════════════════════════════"
-echo "  RALPH WIGGUM PREREQUISITES CHECK (macOS)"
-echo "═══════════════════════════════════════════"
-echo ""
+Copy and paste this prompt into Claude Desktop:
 
-# Colors
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+```
+Create a prerequisites verification script at ~/check-ralph-prereqs.sh that checks for:
+- Homebrew installed
+- Node.js installed (show version)
+- npm installed (show version)
+- Git installed (show version)
+- Docker installed (show version)
+- Claude CLI installed (show version)
+- ANTHROPIC_API_KEY environment variable set (show first 12 chars only)
+- Docker daemon running
+- ralph-sandbox Docker image exists
+- Git credential helper configured
 
-check_command() {
-    if command -v $1 &> /dev/null; then
-        echo -e "${GREEN}✓${NC} $1: $($1 --version 2>/dev/null | head -1)"
-    else
-        echo -e "${RED}✗${NC} $1: NOT INSTALLED"
-    fi
-}
-
-# Check each prerequisite
-check_command "brew"
-check_command "node"
-check_command "npm"
-check_command "git"
-check_command "docker"
-check_command "claude"
-
-echo ""
-
-# Check API Key
-if [ -n "$ANTHROPIC_API_KEY" ]; then
-    echo -e "${GREEN}✓${NC} ANTHROPIC_API_KEY: Set (${ANTHROPIC_API_KEY:0:12}...)"
-else
-    echo -e "${RED}✗${NC} ANTHROPIC_API_KEY: NOT SET"
-fi
-
-# Check Docker running
-if docker info &> /dev/null; then
-    echo -e "${GREEN}✓${NC} Docker: Running"
-else
-    echo -e "${RED}✗${NC} Docker: NOT RUNNING (start Docker Desktop)"
-fi
-
-# Check Ralph image
-if docker image inspect ralph-sandbox &> /dev/null; then
-    echo -e "${GREEN}✓${NC} ralph-sandbox image: Built"
-else
-    echo -e "${YELLOW}!${NC} ralph-sandbox image: Not built yet"
-fi
-
-# Check Git credentials
-if git config --global credential.helper | grep -q osxkeychain; then
-    echo -e "${GREEN}✓${NC} Git credential helper: Configured"
-else
-    echo -e "${YELLOW}!${NC} Git credential helper: Not configured"
-fi
-
-echo ""
-echo "═══════════════════════════════════════════"
-EOF
-
-chmod +x ~/check-ralph-prereqs.sh
-~/check-ralph-prereqs.sh
+Use colored output (green checkmarks for pass, red X for fail).
+Make the script executable and run it. Show me the results.
 ```
 
-You should see all green checkmarks. Fix any red items before proceeding.
+**What this does:**
+- Creates a verification script
+- Runs it and shows status of all prerequisites
 
 ---
 
 ## Project Initialization
 
-### Step 1: Create Project Directory
+### Step 1: Create Project with Full Ralph Structure
 
-```bash
-# Create project in your preferred location
-mkdir -p ~/Projects/compatibility-app
-cd ~/Projects/compatibility-app
+🤖 **Claude Desktop Can Do This**
 
-# Initialize git repository
-git init
+Copy and paste this prompt into Claude Desktop:
 
-# Create initial commit
-echo "# Compatibility App" > README.md
-git add README.md
-git commit -m "Initial commit"
+```
+Create a new project for a Partner Compatibility Rating App at ~/Projects/compatibility-app with the complete Ralph Wiggum structure.
+
+Create these directories:
+- specs/
+- src/
+- src/lib/
+
+Create these files with appropriate content:
+
+1. README.md - Brief project description
+
+2. src/index.html - Basic HTML5 boilerplate with:
+   - Title: "Compatibility App"
+   - Link to styles.css
+   - A div with id="app" containing an h1 and loading message
+   - Script tag for scripts.js
+
+3. src/styles.css - Basic styles with:
+   - Box-sizing border-box reset
+   - System font stack
+   - Light gray background (#F9FAFB)
+   - Centered #app container with max-width 600px
+   - Purple (#7C3AED) h1 color
+
+4. src/scripts.js - Basic app scaffold with:
+   - IIFE wrapper with 'use strict'
+   - Console log on load
+   - Empty state object for room, partnerId, ratings
+   - Init function that runs on DOMContentLoaded
+
+5. AGENTS.md - Operational guide containing:
+   - Project overview (Partner Compatibility Rating App)
+   - Build & run instructions (npx serve src -p 3000)
+   - Validation commands (eslint, prettier)
+   - Tech stack (vanilla HTML/CSS/JS, localStorage)
+   - Project structure diagram
+   - Codebase patterns (state management, DOM updates, naming conventions)
+   - Placeholder for known issues
+
+6. IMPLEMENTATION_PLAN.md - Empty file (Ralph will generate this)
+
+7. loop.sh - The Ralph loop script that:
+   - Parses arguments for plan/build mode and max iterations
+   - Shows colored header with mode, prompt file, branch, iteration limit
+   - Validates: prompt file exists, git repo initialized, claude CLI available, API key set
+   - Main loop that: runs claude with -p --dangerously-skip-permissions --output-format=stream-json --model opus --verbose
+   - Pushes to git after each iteration
+   - Shows timing information
+   - Make it executable
+
+8. run-ralph.sh - Docker run helper that:
+   - Checks Docker is running
+   - Checks API key is set
+   - Checks ralph-sandbox image exists
+   - Mounts project directory to /workspace
+   - Passes ANTHROPIC_API_KEY to container
+   - Forwards port 3000
+   - Supports: no args (interactive shell), "plan N" (planning), "build N" or just "N" (building)
+   - Shows helpful usage instructions
+   - Make it executable
+
+9. PROMPT_plan.md - Planning mode prompt that instructs Claude to:
+   - Study specs/* with parallel Sonnet subagents
+   - Study existing IMPLEMENTATION_PLAN.md if present
+   - Study src/lib/* for shared utilities
+   - Compare specs against src/* code
+   - Create/update IMPLEMENTATION_PLAN.md with prioritized tasks
+   - Use Ultrathink for analysis
+   - NOT implement anything, only plan
+   - Include the ultimate goal: partner compatibility rating app with rooms, sliders, real-time sync, scores
+
+10. PROMPT_build.md - Building mode prompt that instructs Claude to:
+    - Study specs/* with parallel Sonnet subagents
+    - Study IMPLEMENTATION_PLAN.md
+    - Choose most important task
+    - Search codebase before implementing (don't assume)
+    - Use up to 500 Sonnet subagents for reads, 1 for builds
+    - Use Opus subagents for complex reasoning
+    - Run tests after implementing
+    - Update IMPLEMENTATION_PLAN.md with discoveries
+    - Git add, commit, and push when tests pass
+    - Include numbered guardrails (99999, 999999, etc.) for:
+      - Capturing the why in documentation
+      - Single sources of truth
+      - Creating git tags on success
+      - Adding debug logging if needed
+      - Keeping IMPLEMENTATION_PLAN.md current
+      - Updating AGENTS.md with operational learnings (keep brief)
+      - Documenting bugs even if unrelated
+      - Implementing completely (no placeholders)
+      - Cleaning completed items from plan
+      - Fixing spec inconsistencies with Opus subagent
+      - Keeping AGENTS.md operational only
+
+Initialize a git repository and create the initial commit with message "Setup Ralph Wiggum project structure".
+
+Show me the final directory structure and confirm all files were created.
 ```
 
+**What this does:**
+- Creates complete project structure
+- Writes all configuration files
+- Initializes git repository
+- Creates initial commit
+
+---
+
 ### Step 2: Create GitHub Repository
+
+👤 **Human Required**
 
 1. Go to [github.com](https://github.com) and sign in
 2. Click the **+** in the top right → **New repository**
@@ -425,602 +473,41 @@ git commit -m "Initial commit"
 4. Select **Private** (recommended)
 5. Do NOT initialize with README (we already have one)
 6. Click **Create repository**
+7. Copy the repository URL (e.g., `https://github.com/YOUR-USERNAME/compatibility-app.git`)
 
-**Connect your local repo to GitHub:**
-
-```bash
-cd ~/Projects/compatibility-app
-
-# Add GitHub as remote (replace YOUR-USERNAME with your GitHub username)
-git remote add origin https://github.com/YOUR-USERNAME/compatibility-app.git
-
-# Push your code
-git push -u origin main
-```
-
-If prompted for credentials:
-- **Username:** your GitHub username
-- **Password:** your Personal Access Token (from Step 7 of Prerequisites)
-
-### Step 3: Create Ralph Directory Structure
-
-```bash
-cd ~/Projects/compatibility-app
-
-# Create all required directories
-mkdir -p specs
-mkdir -p src/lib
-
-# Create all required files
-touch AGENTS.md
-touch IMPLEMENTATION_PLAN.md
-touch PROMPT_plan.md
-touch PROMPT_build.md
-touch loop.sh
-touch run-ralph.sh
-
-# Set permissions
-chmod +x loop.sh
-chmod +x run-ralph.sh
-```
-
-Your structure now looks like:
-
-```
-compatibility-app/
-├── loop.sh                    # The outer loop script
-├── run-ralph.sh               # Docker run helper
-├── PROMPT_plan.md             # Planning mode instructions
-├── PROMPT_build.md            # Building mode instructions
-├── AGENTS.md                  # Operational guide
-├── IMPLEMENTATION_PLAN.md     # Task list (Ralph generates this)
-├── specs/                     # Requirement specifications
-├── src/                       # Application source code
-│   └── lib/                   # Shared utilities
-└── README.md
-```
-
-### Step 4: Create Initial Source Files
-
-Ralph needs a starting point. Create minimal placeholder files:
-
-```bash
-cat > src/index.html << 'EOF'
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compatibility App</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div id="app">
-        <!-- App content will be rendered here -->
-        <h1>Compatibility App</h1>
-        <p>Loading...</p>
-    </div>
-    <script src="scripts.js"></script>
-</body>
-</html>
-EOF
-
-cat > src/styles.css << 'EOF'
-/* Compatibility App Styles */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #F9FAFB;
-    color: #1F2937;
-    min-height: 100vh;
-    line-height: 1.5;
-}
-
-#app {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-h1 {
-    color: #7C3AED;
-    margin-bottom: 10px;
-}
-EOF
-
-cat > src/scripts.js << 'EOF'
-// Compatibility App
-// Main application logic will be implemented here
-
-(function() {
-    'use strict';
-    
-    console.log('Compatibility App loaded');
-    
-    // Application state
-    const state = {
-        room: null,
-        partnerId: null,
-        ratings: {}
-    };
-    
-    // Initialize app
-    function init() {
-        console.log('Initializing app...');
-        // Implementation will go here
-    }
-    
-    // Start when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
-})();
-EOF
-```
-
-### Step 5: Create the Loop Script
-
-This is the heart of Ralph—a bash script that continuously feeds prompts to Claude:
-
-```bash
-cat > loop.sh << 'SCRIPT'
-#!/bin/bash
-set -euo pipefail
-
-# ═══════════════════════════════════════════════════════════════════
-# RALPH WIGGUM LOOP SCRIPT
-# ═══════════════════════════════════════════════════════════════════
-# Usage: ./loop.sh [plan] [max_iterations]
-# 
-# Examples:
-#   ./loop.sh              # Build mode, unlimited iterations
-#   ./loop.sh 20           # Build mode, max 20 iterations
-#   ./loop.sh plan         # Plan mode, unlimited iterations
-#   ./loop.sh plan 5       # Plan mode, max 5 iterations
-# ═══════════════════════════════════════════════════════════════════
-
-# Color codes
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-NC='\033[0m'
-
-# Parse arguments
-if [ "${1:-}" = "plan" ]; then
-    MODE="plan"
-    PROMPT_FILE="PROMPT_plan.md"
-    MAX_ITERATIONS=${2:-0}
-elif [[ "${1:-}" =~ ^[0-9]+$ ]]; then
-    MODE="build"
-    PROMPT_FILE="PROMPT_build.md"
-    MAX_ITERATIONS=$1
-else
-    MODE="build"
-    PROMPT_FILE="PROMPT_build.md"
-    MAX_ITERATIONS=0
-fi
-
-ITERATION=0
-START_TIME=$(date +%s)
-
-# Get current branch
-CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "main")
-
-# ─────────────────────────────────────────────────────────────────
-# Header
-# ─────────────────────────────────────────────────────────────────
-clear
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "${BLUE}                    RALPH WIGGUM LOOP                           ${NC}"
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo ""
-echo -e "  ${CYAN}Mode:${NC}      ${GREEN}$MODE${NC}"
-echo -e "  ${CYAN}Prompt:${NC}    ${YELLOW}$PROMPT_FILE${NC}"
-echo -e "  ${CYAN}Branch:${NC}    ${YELLOW}$CURRENT_BRANCH${NC}"
-if [ $MAX_ITERATIONS -gt 0 ]; then
-    echo -e "  ${CYAN}Max:${NC}       ${YELLOW}$MAX_ITERATIONS iterations${NC}"
-else
-    echo -e "  ${CYAN}Max:${NC}       ${YELLOW}unlimited${NC} (Ctrl+C to stop)"
-fi
-echo -e "  ${CYAN}Started:${NC}   $(date '+%Y-%m-%d %H:%M:%S')"
-echo ""
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-
-# ─────────────────────────────────────────────────────────────────
-# Validation
-# ─────────────────────────────────────────────────────────────────
-
-# Check prompt file exists
-if [ ! -f "$PROMPT_FILE" ]; then
-    echo -e "\n${RED}ERROR: $PROMPT_FILE not found${NC}"
-    echo "Create this file before running the loop."
-    exit 1
-fi
-
-# Check we're in a git repo
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo -e "\n${RED}ERROR: Not in a git repository${NC}"
-    echo "Run 'git init' first."
-    exit 1
-fi
-
-# Check Claude is available
-if ! command -v claude &> /dev/null; then
-    echo -e "\n${RED}ERROR: Claude CLI not found${NC}"
-    echo "Install with: npm install -g @anthropic-ai/claude-code"
-    exit 1
-fi
-
-# Check API key is set
-if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-    echo -e "\n${RED}ERROR: ANTHROPIC_API_KEY not set${NC}"
-    echo "Export your API key: export ANTHROPIC_API_KEY='sk-ant-...'"
-    exit 1
-fi
-
-echo -e "\n${GREEN}✓ All checks passed. Starting loop...${NC}\n"
-sleep 2
-
-# ─────────────────────────────────────────────────────────────────
-# Main Loop
-# ─────────────────────────────────────────────────────────────────
-
-while true; do
-    # Check iteration limit
-    if [ $MAX_ITERATIONS -gt 0 ] && [ $ITERATION -ge $MAX_ITERATIONS ]; then
-        echo -e "\n${GREEN}═══════════════════════════════════════════════════════════════${NC}"
-        echo -e "${GREEN}  COMPLETE: Reached max iterations ($MAX_ITERATIONS)${NC}"
-        echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
-        break
-    fi
-
-    ITERATION=$((ITERATION + 1))
-    ITER_START=$(date +%s)
-    
-    echo -e "\n${BLUE}┌─────────────────────────────────────────────────────────────┐${NC}"
-    echo -e "${BLUE}│  ITERATION $ITERATION                                              ${NC}"
-    echo -e "${BLUE}│  $(date '+%Y-%m-%d %H:%M:%S')                                     ${NC}"
-    echo -e "${BLUE}└─────────────────────────────────────────────────────────────┘${NC}\n"
-
-    # ─────────────────────────────────────────────────────────────
-    # Run Claude
-    # ─────────────────────────────────────────────────────────────
-    # Flags:
-    #   -p                            : Pipe/headless mode (reads from stdin)
-    #   --dangerously-skip-permissions: Auto-approve all tool calls (REQUIRED)
-    #   --output-format=stream-json   : Structured output for logging
-    #   --model opus                  : Use Opus for best reasoning
-    #   --verbose                     : Detailed execution logging
-    
-    cat "$PROMPT_FILE" | claude -p \
-        --dangerously-skip-permissions \
-        --output-format=stream-json \
-        --model opus \
-        --verbose \
-        2>&1 || {
-            echo -e "\n${YELLOW}⚠ Claude exited with non-zero status${NC}"
-        }
-
-    # ─────────────────────────────────────────────────────────────
-    # Post-iteration tasks
-    # ─────────────────────────────────────────────────────────────
-    
-    # Try to push changes
-    CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "main")
-    if git remote get-url origin &> /dev/null; then
-        if git push origin "$CURRENT_BRANCH" 2>/dev/null; then
-            echo -e "${GREEN}✓ Pushed to origin/$CURRENT_BRANCH${NC}"
-        else
-            git push -u origin "$CURRENT_BRANCH" 2>/dev/null && \
-                echo -e "${GREEN}✓ Created and pushed to origin/$CURRENT_BRANCH${NC}" || \
-                echo -e "${YELLOW}⚠ Push skipped (check remote)${NC}"
-        fi
-    fi
-
-    # Calculate timing
-    ITER_END=$(date +%s)
-    ITER_DURATION=$((ITER_END - ITER_START))
-    TOTAL_DURATION=$((ITER_END - START_TIME))
-    
-    echo -e "\n${GREEN}✓ Iteration $ITERATION complete (${ITER_DURATION}s, total: ${TOTAL_DURATION}s)${NC}"
-    
-    # Brief pause between iterations
-    sleep 2
-done
-
-# ─────────────────────────────────────────────────────────────────
-# Summary
-# ─────────────────────────────────────────────────────────────────
-END_TIME=$(date +%s)
-TOTAL_TIME=$((END_TIME - START_TIME))
-MINUTES=$((TOTAL_TIME / 60))
-SECONDS=$((TOTAL_TIME % 60))
-
-echo -e "\n${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "${BLUE}  RALPH LOOP FINISHED${NC}"
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "  ${CYAN}Iterations:${NC}  $ITERATION"
-echo -e "  ${CYAN}Duration:${NC}    ${MINUTES}m ${SECONDS}s"
-echo -e "  ${CYAN}Commits:${NC}     $(git rev-list --count HEAD 2>/dev/null || echo 'N/A')"
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-SCRIPT
-
-chmod +x loop.sh
-```
-
-### Step 6: Create Docker Run Script
-
-Create a convenient script to run Ralph in Docker:
-
-```bash
-cat > run-ralph.sh << 'SCRIPT'
-#!/bin/bash
-
-# ═══════════════════════════════════════════════════════════════════
-# RUN RALPH IN DOCKER SANDBOX
-# ═══════════════════════════════════════════════════════════════════
-# Usage: ./run-ralph.sh [plan|build] [max_iterations]
-#
-# Examples:
-#   ./run-ralph.sh              # Enter container shell
-#   ./run-ralph.sh plan 3       # Run planning mode
-#   ./run-ralph.sh build 20     # Run build mode
-#   ./run-ralph.sh 20           # Run build mode (shorthand)
-# ═══════════════════════════════════════════════════════════════════
-
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m'
-
-# Check Docker is running
-if ! docker info &> /dev/null; then
-    echo -e "${RED}ERROR: Docker is not running.${NC}"
-    echo "Start Docker Desktop from Applications, then try again."
-    exit 1
-fi
-
-# Check API key
-if [ -z "$ANTHROPIC_API_KEY" ]; then
-    echo -e "${RED}ERROR: ANTHROPIC_API_KEY not set${NC}"
-    echo "Run: export ANTHROPIC_API_KEY='sk-ant-...'"
-    exit 1
-fi
-
-# Check ralph-sandbox image exists
-if ! docker image inspect ralph-sandbox &> /dev/null; then
-    echo -e "${RED}ERROR: ralph-sandbox image not found${NC}"
-    echo "Build it first:"
-    echo "  cd ~/ralph-docker"
-    echo "  docker build -t ralph-sandbox ."
-    exit 1
-fi
-
-# Get the project directory (where this script is)
-PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "${BLUE}  RALPH WIGGUM DOCKER SANDBOX${NC}"
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "  ${GREEN}Project:${NC} $PROJECT_DIR"
-echo -e "  ${GREEN}API Key:${NC} ${ANTHROPIC_API_KEY:0:12}..."
-
-# Determine command to run
-if [ $# -eq 0 ]; then
-    # No arguments - start interactive shell
-    echo -e "  ${GREEN}Mode:${NC}    Interactive shell"
-    echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    echo ""
-    echo "Inside the container, run:"
-    echo -e "  ${YELLOW}./loop.sh plan 3${NC}     # Generate implementation plan"
-    echo -e "  ${YELLOW}./loop.sh 20${NC}         # Build with max 20 iterations"
-    echo -e "  ${YELLOW}./loop.sh${NC}            # Build unlimited (Ctrl+C to stop)"
-    echo ""
-    
-    docker run -it --rm \
-        -v "$PROJECT_DIR:/workspace" \
-        -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
-        -p 3000:3000 \
-        -w /workspace \
-        ralph-sandbox \
-        /bin/bash
-else
-    # Arguments provided - run loop directly
-    if [ "$1" = "plan" ]; then
-        ITERATIONS="${2:-0}"
-        echo -e "  ${GREEN}Mode:${NC}    Planning (${ITERATIONS:-unlimited} iterations)"
-        CMD="./loop.sh plan $ITERATIONS"
-    elif [ "$1" = "build" ]; then
-        ITERATIONS="${2:-0}"
-        echo -e "  ${GREEN}Mode:${NC}    Building (${ITERATIONS:-unlimited} iterations)"
-        CMD="./loop.sh $ITERATIONS"
-    elif [[ "$1" =~ ^[0-9]+$ ]]; then
-        echo -e "  ${GREEN}Mode:${NC}    Building ($1 iterations)"
-        CMD="./loop.sh $1"
-    else
-        echo -e "${RED}ERROR: Unknown argument '$1'${NC}"
-        echo "Usage: ./run-ralph.sh [plan|build] [max_iterations]"
-        exit 1
-    fi
-    
-    echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    echo ""
-    
-    docker run -it --rm \
-        -v "$PROJECT_DIR:/workspace" \
-        -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
-        -p 3000:3000 \
-        -w /workspace \
-        ralph-sandbox \
-        /bin/bash -c "$CMD"
-fi
-SCRIPT
-
-chmod +x run-ralph.sh
-```
-
-### Step 7: Create AGENTS.md
-
-This operational guide tells Ralph how to build and run the project:
-
-```bash
-cat > AGENTS.md << 'EOF'
-# Operational Guide
-
-## Project Overview
-
-Partner Compatibility Rating App — A web application for comparing relationship preferences between two partners.
-
-## Build & Run
-
-This is a static web application using vanilla HTML/CSS/JavaScript. No build step required.
-
-**Start Local Server:**
-```bash
-npx serve src -p 3000
-```
-
-**Access:** http://localhost:3000
-
-**Alternative (open directly):**
-```bash
-# Note: Some features may not work with file:// URLs
-open src/index.html
-```
-
-## Validation Commands
-
-Run these to validate changes before committing:
-
-```bash
-# Lint JavaScript (auto-fix issues)
-npx eslint src/**/*.js --fix
-
-# Check code formatting
-npx prettier --check "src/**/*.{js,css,html}"
-
-# Fix formatting
-npx prettier --write "src/**/*.{js,css,html}"
-```
-
-## Tech Stack
-
-- HTML5
-- CSS3 (vanilla, no preprocessors)
-- JavaScript (ES6+, vanilla, no frameworks)
-- LocalStorage for client-side persistence
-- No build step required
-
-## Project Structure
-
-```
-src/
-├── index.html          # Main entry point
-├── styles.css          # All styles
-├── scripts.js          # Main application logic
-└── lib/                # Shared utilities
-    └── (utilities)
-```
-
-## Codebase Patterns
-
-- **State Management:** Single state object, persist to localStorage
-- **DOM Updates:** Use template literals for HTML generation
-- **Event Handling:** Delegate events to parent containers where possible
-- **Error Handling:** Wrap async operations in try/catch
-- **Naming:** camelCase for JS, kebab-case for CSS classes
-
-## Testing Locally
-
-To test the two-partner sync feature:
-1. Open http://localhost:3000 in one browser tab (Partner 1)
-2. Open http://localhost:3000 in another tab (Partner 2)
-3. Create a room in Tab 1, copy the room code
-4. Join the room in Tab 2 using the code
-5. Both tabs should sync via localStorage events
-
-## Known Issues
-
-(Ralph updates this section as issues are discovered)
+*Note: Claude Desktop cannot create GitHub repositories without pre-authorized OAuth tokens.*
 
 ---
-*Keep this file brief and operational. Status updates belong in IMPLEMENTATION_PLAN.md*
-EOF
+
+### Step 3: Connect Local Repo to GitHub
+
+🤖 **Claude Desktop Can Do This**
+
+Copy and paste this prompt into Claude Desktop (replace YOUR-USERNAME):
+
+```
+Connect my local git repository at ~/Projects/compatibility-app to GitHub.
+
+Add the remote origin: https://github.com/YOUR-USERNAME/compatibility-app.git
+
+Push the main branch to GitHub with upstream tracking.
+
+Note: If this is the first push, I may be prompted for GitHub credentials. My username is YOUR-USERNAME and I'll enter my Personal Access Token when prompted.
+
+Show me the output of the push and confirm the remote is configured correctly with `git remote -v`.
 ```
 
-### Step 8: Create Planning Prompt
+**What this does:**
+- Runs `git remote add origin ...`
+- Runs `git push -u origin main`
 
-This prompt tells Ralph how to analyze specs and create an implementation plan:
-
-```bash
-cat > PROMPT_plan.md << 'EOF'
-0a. Study `specs/*` with up to 250 parallel Sonnet subagents to learn the application specifications.
-0b. Study @IMPLEMENTATION_PLAN.md (if present) to understand the plan so far.
-0c. Study `src/lib/*` with up to 250 parallel Sonnet subagents to understand shared utilities & components.
-0d. For reference, the application source code is in `src/*`.
-
-1. Study @IMPLEMENTATION_PLAN.md (if present; it may be incorrect) and use up to 500 Sonnet subagents to study existing source code in `src/*` and compare it against `specs/*`. Use an Opus subagent to analyze findings, prioritize tasks, and create/update @IMPLEMENTATION_PLAN.md as a bullet point list sorted in priority of items yet to be implemented. Ultrathink. Consider searching for TODO, minimal implementations, placeholders, skipped/flaky tests, and inconsistent patterns. Study @IMPLEMENTATION_PLAN.md to determine starting point for research and keep it up to date with items considered complete/incomplete using subagents.
-
-IMPORTANT: Plan only. Do NOT implement anything. Do NOT assume functionality is missing; confirm with code search first. Treat `src/lib` as the project's standard library for shared utilities and components. Prefer consolidated, idiomatic implementations there over ad-hoc copies.
-
-ULTIMATE GOAL: Build a partner compatibility rating web application where two users can join a shared room, rate their preferences across multiple categories using sliders, see each other's progress in real-time, and view compatibility scores. Consider missing elements and plan accordingly. If an element is missing, search first to confirm it doesn't exist, then if needed author the specification at specs/FILENAME.md. If you create a new element then document the plan to implement it in @IMPLEMENTATION_PLAN.md using a subagent.
-EOF
-```
-
-### Step 9: Create Building Prompt
-
-This prompt tells Ralph how to implement features from the plan:
-
-```bash
-cat > PROMPT_build.md << 'EOF'
-0a. Study `specs/*` with up to 500 parallel Sonnet subagents to learn the application specifications.
-0b. Study @IMPLEMENTATION_PLAN.md.
-0c. For reference, the application source code is in `src/*`.
-
-1. Your task is to implement functionality per the specifications using parallel subagents. Follow @IMPLEMENTATION_PLAN.md and choose the most important item to address. Before making changes, search the codebase (don't assume not implemented) using Sonnet subagents. You may use up to 500 parallel Sonnet subagents for searches/reads and only 1 Sonnet subagent for build/tests. Use Opus subagents when complex reasoning is needed (debugging, architectural decisions).
-2. After implementing functionality or resolving problems, run the tests for that unit of code that was improved. If functionality is missing then it's your job to add it as per the application specifications. Ultrathink.
-3. When you discover issues, immediately update @IMPLEMENTATION_PLAN.md with your findings using a subagent. When resolved, update and remove the item.
-4. When the tests pass, update @IMPLEMENTATION_PLAN.md, then `git add -A` then `git commit` with a message describing the changes. After the commit, `git push`.
-
-99999. Important: When authoring documentation, capture the why — tests and implementation importance.
-999999. Important: Single sources of truth, no migrations/adapters. If tests unrelated to your work fail, resolve them as part of the increment.
-9999999. As soon as there are no build or test errors create a git tag. If there are no git tags start at 0.0.0 and increment patch by 1 for example 0.0.1 if 0.0.0 does not exist.
-99999999. You may add extra logging if required to debug issues.
-999999999. Keep @IMPLEMENTATION_PLAN.md current with learnings using a subagent — future work depends on this to avoid duplicating efforts. Update especially after finishing your turn.
-9999999999. When you learn something new about how to run the application, update @AGENTS.md using a subagent but keep it brief.
-99999999999. For any bugs you notice, resolve them or document them in @IMPLEMENTATION_PLAN.md using a subagent even if it is unrelated to the current piece of work.
-999999999999. Implement functionality completely. Placeholders and stubs waste efforts and time redoing the same work.
-9999999999999. When @IMPLEMENTATION_PLAN.md becomes large periodically clean out the items that are completed from the file using a subagent.
-99999999999999. If you find inconsistencies in the specs/* then use an Opus 4.5 subagent with 'ultrathink' requested to update the specs.
-999999999999999. IMPORTANT: Keep @AGENTS.md operational only — status updates and progress notes belong in IMPLEMENTATION_PLAN.md. A bloated AGENTS.md pollutes every future loop's context.
-EOF
-```
-
-### Step 10: Commit the Setup
-
-```bash
-git add -A
-git commit -m "Setup Ralph Wiggum project structure"
-git push
-```
+*Note: On first push, you'll be prompted for credentials. Enter your GitHub username and Personal Access Token (not password).*
 
 ---
 
 ## Define Requirements
 
-This phase happens **outside** the Ralph loop. You write specifications that describe what to build.
+This phase creates the specification files that tell Ralph what to build.
 
 ### Understanding Subagents
 
@@ -1039,384 +526,83 @@ The numbers (250, 500) are guidance about parallelism—Claude decides how to ac
 
 This keeps costs down while maintaining quality where it matters.
 
-### Step 1: Identify Your Job to Be Done (JTBD)
+---
 
-The JTBD is the high-level outcome users want:
+### Create All Specification Files
 
-> "Help partners discover and compare their preferences to understand compatibility"
+🤖 **Claude Desktop Can Do This**
 
-### Step 2: Break into Topics of Concern
+Copy and paste this prompt into Claude Desktop:
 
-Each topic becomes one spec file. Use the "one sentence without 'and'" test—if you need "and" to describe it, split it into multiple topics.
+```
+Create all specification files for the Partner Compatibility Rating App in ~/Projects/compatibility-app/specs/
 
-| Topic | Description | Spec File |
-|-------|-------------|-----------|
-| Room Management | Create/join rooms with codes | `specs/room-management.md` |
-| Preference System | Categories and slider ratings | `specs/preference-system.md` |
-| Real-time Sync | Live updates between partners | `specs/realtime-sync.md` |
-| Scoring | Compatibility calculations | `specs/scoring.md` |
-| User Interface | Layout, responsiveness, UX | `specs/user-interface.md` |
+Create these 5 spec files with detailed requirements and acceptance criteria:
 
-### Step 3: Write Specification Files
+1. specs/room-management.md
+   Overview: Users create or join rooms using short codes
+   Requirements for:
+   - Room Creation: 6-char alphanumeric codes (exclude confusing chars like 0/O, 1/l), creator is "Partner 1", 24hr expiration
+   - Room Joining: input field, validation, joiner is "Partner 2", max 2 users, error handling
+   - Room State: localStorage persistence, unique partner IDs, handle refresh, "waiting for partner" state
+   - Room Lifecycle: Active, Waiting, Expired, Complete states
+   Acceptance criteria as checkboxes
 
-Create each spec with clear requirements and acceptance criteria:
+2. specs/preference-system.md
+   Overview: Categories of preferences with 1-10 sliders
+   Requirements for:
+   - 6 Categories with 5 items each:
+     * Communication (conflict resolution, love language, check-ins, honesty style, venting vs solutions)
+     * Lifestyle (early bird/night owl, tidiness, routine/spontaneity, introvert/extrovert, work-life)
+     * Adventure (new foods, travel, risk tolerance, planning, exploration)
+     * Finance (saving/spending, separate/joint, experiences/material, debt comfort, budgeting)
+     * Family (children, extended family, roles, holidays, pets)
+     * Intimacy (physical affection, quality time, emotional expression, reassurance, conversation depth)
+   - Slider Interface: range 1-10, show value, endpoint labels, smooth animation, default to 5
+   - Rating Flow: sequential categories, complete all before next, can go back, progress indicator, partner ratings hidden until both complete
+   Acceptance criteria as checkboxes
 
-**specs/room-management.md:**
+3. specs/realtime-sync.md
+   Overview: Both partners see updates in real-time
+   Requirements for:
+   - Sync Mechanism: poll-based (2 sec), localStorage for same-browser testing
+   - Demo/Local Testing: storage events for cross-tab sync
+   - Data to Sync: presence, category completion, ratings (after mutual completion), progress %
+   - Connection Status: online/away indicator, 30 sec timeout
+   - State Management: single source of truth, key structure room:{code}:state, timestamps, last-write-wins
+   Acceptance criteria as checkboxes
 
-```bash
-cat > specs/room-management.md << 'EOF'
-# Room Management
+4. specs/scoring.md
+   Overview: Calculate and display compatibility scores
+   Requirements for:
+   - Scoring Algorithm:
+     * Per-item: 10 - |rating1 - rating2| (max 10, min 1)
+     * Per-category: average of items as percentage
+     * Overall: average of categories as percentage
+   - Score Display: percentage with decimal, color coding (green 80%+, yellow 50-79%, red <50%), bar chart
+   - Item Comparison: side-by-side ratings, highlight matches (within 2), highlight mismatches (5+ apart)
+   - Progressive Reveal: show category after both complete, update overall as you go
+   Acceptance criteria as checkboxes
 
-## Overview
+5. specs/user-interface.md
+   Overview: Clean, mobile-first interface
+   Requirements for:
+   - Screen States: Landing (create/join), Waiting (code display, copy button), Rating (category, progress, slider, nav), Results (score, breakdown, details, share)
+   - Layout: mobile-first 320px min, single column, centered 600px max, 44px touch targets
+   - Visual Design: purple primary #7C3AED, green #10B981, amber #F59E0B, red #EF4444, gray background #F9FAFB
+   - Animations: smooth transitions, slider animation, progress fills, score reveals
+   - Accessibility: semantic HTML, ARIA labels, keyboard nav, focus indicators, color not sole indicator
+   - Error States: inline messages, toast notifications, field highlighting, recovery actions
+   Acceptance criteria as checkboxes
 
-Users create or join rooms using short codes to rate preferences together.
+After creating all specs, commit them with message "Add requirement specifications" and push to GitHub.
 
-## Requirements
-
-### Room Creation
-- Generate unique 6-character alphanumeric room codes
-- Exclude confusing characters (0/O, 1/l/I) for verbal sharing
-- Creator automatically joins as "Partner 1"
-- Display room code prominently for sharing
-- Room persists for 24 hours
-
-### Room Joining
-- Input field for entering room code
-- Validate code exists before joining
-- Joiner becomes "Partner 2"
-- Maximum 2 users per room
-- Show error for invalid/full rooms
-
-### Room State
-- Store in localStorage: room code, partner IDs, creation time
-- Generate unique partner ID on first visit (persist in localStorage)
-- Handle page refresh gracefully (restore session)
-- Show "waiting for partner" until both joined
-
-### Room Lifecycle
-- Active: both partners present
-- Waiting: one partner, waiting for other
-- Expired: 24 hours elapsed
-- Complete: both finished all ratings
-
-## Acceptance Criteria
-
-- [ ] Room codes are 6 characters using safe alphanumeric set
-- [ ] Creating room shows code prominently with copy button
-- [ ] Joining valid code shows partner's presence
-- [ ] Joining invalid code shows helpful error message
-- [ ] Refreshing page maintains room session
-- [ ] Third user attempting to join sees "room full" error
-- [ ] Room state persists across browser sessions
-EOF
+Show me a summary of each spec file created.
 ```
 
-**specs/preference-system.md:**
-
-```bash
-cat > specs/preference-system.md << 'EOF'
-# Preference System
-
-## Overview
-
-Categories of relationship preferences with slider-based ratings from 1-10.
-
-## Requirements
-
-### Categories
-
-Six preference categories, each with 5-8 items:
-
-1. **Communication**
-   - "I prefer to resolve conflicts immediately vs. taking time to cool off"
-   - "I express love through words vs. actions"
-   - "I need lots of daily check-ins vs. independence"
-   - "I prefer direct honesty vs. tactful delivery"
-   - "I share problems to vent vs. seeking solutions"
-
-2. **Lifestyle**
-   - "I'm an early bird vs. night owl"
-   - "I prefer a tidy space vs. comfortable clutter"
-   - "I like routine vs. spontaneity"
-   - "I'm introverted vs. extroverted"
-   - "I prioritize work vs. personal time"
-
-3. **Adventure**
-   - "I enjoy trying new foods vs. sticking to favorites"
-   - "I prefer staycations vs. travel adventures"
-   - "I'm risk-averse vs. thrill-seeking"
-   - "I like planned activities vs. going with the flow"
-   - "I prefer familiar places vs. exploring new ones"
-
-4. **Finance**
-   - "I'm a saver vs. spender"
-   - "I prefer separate vs. joint finances"
-   - "I value experiences vs. material things"
-   - "I'm comfortable with debt vs. debt-averse"
-   - "I prefer budgeting vs. flexible spending"
-
-5. **Family**
-   - "I want children vs. prefer not to have children"
-   - "I value extended family involvement vs. independence"
-   - "I prefer traditional roles vs. equal partnership"
-   - "Holidays with family vs. creating own traditions"
-   - "I want pets vs. prefer no pets"
-
-6. **Intimacy**
-   - "I need lots of physical affection vs. personal space"
-   - "I prefer quality time together vs. parallel activities"
-   - "I express feelings openly vs. privately"
-   - "I need frequent reassurance vs. assumed security"
-   - "I value deep conversations vs. comfortable silence"
-
-### Slider Interface
-- Range: 1 to 10
-- Show numeric value while dragging
-- Labels at endpoints (1 = left statement, 10 = right statement)
-- Smooth animation on touch and mouse
-- Default to middle (5) before user interaction
-
-### Rating Flow
-- Navigate through categories sequentially
-- Must complete all items in category before next
-- Can go back to previous categories
-- Progress indicator shows completion
-- Partner's ratings hidden until both complete category
-
-## Acceptance Criteria
-
-- [ ] All 6 categories present with 5+ items each
-- [ ] Sliders work on mouse and touch devices
-- [ ] Current value displays while adjusting
-- [ ] Endpoint labels clearly describe the scale
-- [ ] Progress shows X/Y items per category
-- [ ] Cannot skip items within a category
-- [ ] Can navigate between completed categories
-- [ ] Partner ratings hidden until mutual completion
-EOF
-```
-
-**specs/realtime-sync.md:**
-
-```bash
-cat > specs/realtime-sync.md << 'EOF'
-# Real-time Synchronization
-
-## Overview
-
-Both partners see updates as the other rates preferences.
-
-## Requirements
-
-### Sync Mechanism
-- Poll-based synchronization (no external services required)
-- Poll interval: 2 seconds
-- Use localStorage as shared state for same-browser testing
-
-### For Demo/Local Testing
-Since this is a client-side app without a backend:
-- Support "same browser, different tabs" testing via localStorage events
-- Storage event listener for cross-tab communication
-- Each tab represents one partner
-
-### Data to Sync
-- Partner presence (online/last seen)
-- Category completion status per partner
-- Individual ratings (revealed after both complete category)
-- Overall progress percentage
-
-### Connection Status
-- Show indicator: "Partner online" / "Partner away"
-- Update presence on any activity
-- Mark as "away" after 30 seconds of inactivity
-
-### State Management
-- Single source of truth in localStorage
-- Key structure: `room:{roomCode}:state`
-- Include timestamps for all changes
-- Last-write-wins for conflicts
-
-## Acceptance Criteria
-
-- [ ] Partner's progress updates within 3 seconds
-- [ ] Connection status clearly visible
-- [ ] Works across browser tabs (same browser)
-- [ ] Presence indicator reflects partner activity
-- [ ] No data loss on rapid concurrent edits
-- [ ] State survives page refresh
-EOF
-```
-
-**specs/scoring.md:**
-
-```bash
-cat > specs/scoring.md << 'EOF'
-# Compatibility Scoring
-
-## Overview
-
-Calculate and display compatibility based on preference matches.
-
-## Requirements
-
-### Scoring Algorithm
-
-**Per-item compatibility:**
-```
-itemScore = 10 - |partner1Rating - partner2Rating|
-```
-- Maximum: 10 (identical ratings)
-- Minimum: 1 (opposite ratings: 1 vs 10)
-
-**Per-category score:**
-```
-categoryScore = average(itemScores) / 10 * 100
-```
-- Expressed as percentage (0-100%)
-
-**Overall score:**
-```
-overallScore = average(categoryScores)
-```
-- Equal weight to all categories
-- Expressed as percentage
-
-### Score Display
-
-**Category Results (after both complete):**
-- Percentage with one decimal (e.g., "78.5%")
-- Color coding:
-  - Green: 80%+ (highly compatible)
-  - Yellow: 50-79% (some differences)
-  - Red: <50% (significant differences)
-- Bar chart showing each category
-
-**Overall Score:**
-- Large, prominent display
-- Same color coding as categories
-- Show after at least one category complete
-
-**Item Comparison (detail view):**
-- Show both partners' ratings side by side
-- Highlight matches (within 2 points)
-- Highlight mismatches (5+ points apart)
-
-### Progressive Reveal
-- Show category score when both complete that category
-- Update overall score as categories complete
-- Full results available when all categories done
-
-## Acceptance Criteria
-
-- [ ] Scores calculate correctly per algorithm
-- [ ] Category scores appear after both partners complete
-- [ ] Color coding matches specified thresholds
-- [ ] Overall score updates as categories complete
-- [ ] Item comparison shows both ratings
-- [ ] Matches and mismatches visually distinct
-- [ ] Scores persist across sessions
-EOF
-```
-
-**specs/user-interface.md:**
-
-```bash
-cat > specs/user-interface.md << 'EOF'
-# User Interface
-
-## Overview
-
-Clean, mobile-first interface for the compatibility rating app.
-
-## Requirements
-
-### Screen States
-
-1. **Landing Screen**
-   - App title and brief description
-   - "Create Room" button (primary action)
-   - "Join Room" button (secondary action)
-   - Room code input field (for joining)
-
-2. **Waiting Screen**
-   - Display room code (large, copyable)
-   - "Share this code with your partner"
-   - Copy to clipboard button
-   - Waiting animation/indicator
-   - Cancel/leave room option
-
-3. **Rating Screen**
-   - Category name as header
-   - Progress indicator (e.g., "Question 3 of 5")
-   - Current preference item text
-   - Slider with value display
-   - Previous/Next navigation
-   - Partner status indicator (corner)
-
-4. **Results Screen**
-   - Overall compatibility score (hero)
-   - Category breakdown (bar chart or cards)
-   - Expandable item details per category
-   - "Start Over" option
-   - Share results option (copy text)
-
-### Layout Principles
-- Mobile-first (320px minimum width)
-- Single column on mobile
-- Centered content, max-width 600px
-- Comfortable touch targets (44px minimum)
-- Clear visual hierarchy
-
-### Visual Design
-- Soft, friendly color palette
-- Primary: Warm purple (#7C3AED)
-- Success: Green (#10B981)
-- Warning: Amber (#F59E0B)
-- Error: Red (#EF4444)
-- Background: Light gray (#F9FAFB)
-- Clean, readable typography
-- Subtle shadows and rounded corners
-
-### Animations
-- Smooth transitions between screens (fade)
-- Slider value changes animated
-- Progress bar fills smoothly
-- Score reveals with subtle animation
-
-### Accessibility
-- Semantic HTML structure
-- ARIA labels for interactive elements
-- Keyboard navigation support
-- Focus indicators visible
-- Color not sole indicator (use icons/text too)
-- Minimum contrast ratios met
-
-### Error States
-- Invalid room code: inline message
-- Network issues: toast notification
-- Empty required fields: highlight field
-- All errors include recovery action
-
-## Acceptance Criteria
-
-- [ ] Works on 320px screens and up
-- [ ] All touch targets 44px minimum
-- [ ] Keyboard can navigate entire app
-- [ ] Screen reader can understand all content
-- [ ] Colors match specified palette
-- [ ] Transitions feel smooth (no jank)
-- [ ] Error messages explain how to recover
-- [ ] Loading states prevent confusion
-EOF
-```
-
-### Step 4: Commit Specifications
-
-```bash
-git add specs/
-git commit -m "Add requirement specifications"
-git push
-```
+**What this does:**
+- Creates all 5 specification files with full detail
+- Commits and pushes to GitHub
 
 ---
 
@@ -1424,18 +610,30 @@ git push
 
 Now we use Ralph to generate an implementation plan.
 
-### Step 1: Enter Docker Sandbox
+### Step 1: Start Docker Desktop
+
+👤 **Human Required**
+
+1. Open **Docker Desktop** from your Applications folder
+2. Wait for the whale icon to appear in your menu bar
+3. Wait for it to say "Docker Desktop is running"
+
+*Note: Claude Desktop cannot launch macOS applications.*
+
+---
+
+### Step 2: Enter Docker Sandbox and Run Planning
+
+👤 **Human Required**
+
+Open Terminal and run:
 
 ```bash
 cd ~/Projects/compatibility-app
 ./run-ralph.sh
 ```
 
-This opens an interactive shell inside the Docker container with your project mounted.
-
-### Step 2: Run Planning Loop
-
-Inside the container:
+This opens an interactive shell inside the Docker container. Once inside, run:
 
 ```bash
 ./loop.sh plan 3
@@ -1449,9 +647,15 @@ This runs up to 3 planning iterations. Ralph will:
 
 **What "Ultrathink" means:** When Ralph sees this instruction, it engages in deeper, more thorough reasoning—considering more possibilities, checking its work, and thinking through edge cases. It's Claude-specific terminology that triggers more deliberate processing.
 
+*Note: Claude Desktop cannot enter interactive Docker sessions or run the Ralph loop.*
+
+---
+
 ### Step 3: Review the Plan
 
-After planning completes, review the generated plan:
+👤 **Human Required** (but Claude Desktop can help analyze)
+
+After planning completes, review the generated plan. Inside the container or on your Mac:
 
 ```bash
 cat IMPLEMENTATION_PLAN.md
@@ -1464,43 +668,12 @@ cat IMPLEMENTATION_PLAN.md
 - No duplicate tasks
 - Clear task descriptions
 
-**Example plan structure:**
-```markdown
-# Implementation Plan
-
-## High Priority
-
-- [ ] Create basic HTML structure with all screen containers
-- [ ] Implement room code generation (6 chars, safe alphabet)
-- [ ] Create room state management in localStorage
-- [ ] Build landing screen UI (create/join buttons)
-- [ ] Build waiting screen UI (room code display, copy button)
-
-## Medium Priority
-
-- [ ] Implement preference data structure (categories, items)
-- [ ] Build slider component with value display
-- [ ] Create rating screen layout
-- [ ] Implement category navigation
-
-## Lower Priority
-
-- [ ] Add scoring algorithm
-- [ ] Build results display
-- [ ] Implement cross-tab sync via storage events
-- [ ] Add animations and transitions
-```
-
-### Step 4: Regenerate If Needed
-
-If the plan looks wrong:
+If the plan looks wrong, regenerate it:
 
 ```bash
 rm IMPLEMENTATION_PLAN.md
 ./loop.sh plan 3
 ```
-
-You can also edit specs for clarity, then regenerate.
 
 ---
 
@@ -1508,7 +681,9 @@ You can also edit specs for clarity, then regenerate.
 
 Now Ralph implements the application.
 
-### Step 1: Start the Build Loop
+### Step 1: Run the Build Loop
+
+👤 **Human Required**
 
 Inside the Docker container:
 
@@ -1519,6 +694,10 @@ Inside the Docker container:
 # Or unlimited (stop with Ctrl+C)
 ./loop.sh
 ```
+
+*Note: Claude Desktop cannot run interactive Docker sessions.*
+
+---
 
 ### Step 2: What Happens Each Iteration
 
@@ -1535,41 +714,50 @@ Each iteration, Ralph:
 9. **Pushes** — Pushes to GitHub
 10. **Clears** — Context window resets for next iteration
 
+---
+
 ### Step 3: View Your App During Development
 
-Open a **new terminal tab** on your Mac (not in Docker):
+🤖 **Claude Desktop Can Help**
 
-**Option A: Local Server (Recommended)**
-```bash
-cd ~/Projects/compatibility-app
-npx serve src -p 3000
+Copy and paste this prompt into Claude Desktop:
+
 ```
-Then open http://localhost:3000 in your browser.
+Start a local development server for my compatibility app at ~/Projects/compatibility-app
 
-**Option B: Open File Directly**
+Run: npx serve src -p 3000
+
+Tell me when it's running and remind me to open http://localhost:3000 in my browser.
+```
+
+**Alternative — open the file directly:**
 ```bash
 open ~/Projects/compatibility-app/src/index.html
 ```
+
 Note: Some features (like localStorage sync across tabs) may not work with `file://` URLs.
 
 **Tip:** Keep a browser tab open and refresh after each Ralph iteration to see changes.
 
+---
+
 ### Step 4: Monitor Progress
 
-In another terminal tab:
+🤖 **Claude Desktop Can Help**
 
-```bash
-cd ~/Projects/compatibility-app
+Copy and paste this prompt into Claude Desktop:
 
-# Watch git log (updates every 5 seconds)
-watch -n 5 'git log --oneline -15'
-
-# Or manually check
-git log --oneline -15
-
-# Check implementation plan status
-cat IMPLEMENTATION_PLAN.md
 ```
+Show me the recent git activity for my compatibility app at ~/Projects/compatibility-app
+
+1. Show the last 15 commits (oneline format)
+2. Show the current contents of IMPLEMENTATION_PLAN.md
+3. Count how many tasks are marked complete vs incomplete
+
+Give me a summary of the project's progress.
+```
+
+---
 
 ### Step 5: Context Window Limits
 
@@ -1590,7 +778,11 @@ Claude has a ~200K token context window. If a single iteration tries to:
 - Split large files into smaller modules
 - Add to PROMPT_build.md: "Focus on ONE small piece at a time"
 
+---
+
 ### Step 6: Stopping and Resuming
+
+👤 **Human Required**
 
 **To stop safely:**
 1. Wait for current iteration to commit (watch for "Iteration X complete")
@@ -1625,11 +817,9 @@ git reset --hard HEAD
 
 ## Deployment
 
-### Setting Up Netlify with GitHub (Auto-Deploy)
+### Step 1: Create Netlify Account
 
-This setup means every push to GitHub automatically updates your live site.
-
-#### Step 1: Create Netlify Account
+👤 **Human Required**
 
 1. Go to [netlify.com](https://netlify.com)
 2. Click **Sign up**
@@ -1637,7 +827,13 @@ This setup means every push to GitHub automatically updates your live site.
 4. Authorize Netlify to access your GitHub account
 5. Complete any additional profile setup
 
-#### Step 2: Connect Your Repository
+*Note: Claude Desktop cannot create accounts or complete OAuth flows.*
+
+---
+
+### Step 2: Connect Repository to Netlify
+
+👤 **Human Required**
 
 1. In Netlify dashboard, click **Add new site** → **Import an existing project**
 2. Click **GitHub**
@@ -1645,9 +841,15 @@ This setup means every push to GitHub automatically updates your live site.
 4. Find and select your `compatibility-app` repository
    - Private repositories appear here too!
 
-#### Step 3: Configure Build Settings
+*Note: Claude Desktop cannot complete OAuth authorization flows.*
 
-Netlify will ask for build settings:
+---
+
+### Step 3: Configure Build Settings
+
+👤 **Human Required**
+
+Netlify will ask for build settings. Enter:
 
 | Field | What to Enter |
 |-------|---------------|
@@ -1660,7 +862,11 @@ Netlify will ask for build settings:
 
 Click **Deploy site**
 
-#### Step 4: Wait for First Deploy
+---
+
+### Step 4: Wait for First Deploy
+
+👤 **Human Required**
 
 Netlify builds your site in about 30 seconds. You'll see:
 - Build log scrolling
@@ -1669,7 +875,9 @@ Netlify builds your site in about 30 seconds. You'll see:
 
 Click the URL to see your live site!
 
-#### Step 5: Automatic Deploys
+---
+
+### Step 5: Automatic Deploys
 
 From now on:
 1. Ralph makes changes in Docker
@@ -1679,7 +887,11 @@ From now on:
 
 The `loop.sh` script already includes `git push` after each commit, so this happens automatically during Ralph iterations.
 
-#### Step 6: (Optional) Custom Domain
+---
+
+### Step 6: (Optional) Custom Domain
+
+👤 **Human Required**
 
 If you want `yourname.com` instead of `random.netlify.app`:
 
@@ -1691,7 +903,9 @@ If you want `yourname.com` instead of `random.netlify.app`:
 
 Netlify provides free SSL certificates automatically.
 
-#### Troubleshooting Netlify
+---
+
+### Troubleshooting Netlify
 
 **"Deploy failed: publish directory not found"**
 - Make sure `src` folder exists and was pushed to GitHub
@@ -1723,32 +937,53 @@ Netlify provides free SSL certificates automatically.
 | **Large commits** | Multiple features per commit | Add: "Implement ONE task, then commit immediately" |
 | **Incomplete features** | Placeholders left behind | Add: "NEVER create placeholders. Implement completely or skip." |
 
+---
+
 ### Adding Guardrails
 
-When Ralph fails repeatedly in a specific way, add guardrails to `PROMPT_build.md`. Open the file and add after the existing numbered items:
+🤖 **Claude Desktop Can Do This**
 
-```markdown
-9999999999999999. CRITICAL: Before implementing ANY feature, use at minimum 3 subagents to search for existing implementations. Report findings before writing code.
+Copy and paste this prompt into Claude Desktop:
 
-99999999999999999. MANDATORY: Run 'npx eslint src/' before every commit. Fix all errors. No commits with lint errors.
-
-999999999999999999. ONE task per iteration. After completing ONE task, commit and exit. Do not continue to other tasks.
-
-9999999999999999999. NEVER create placeholder or stub implementations. If you cannot fully implement a feature, document it in IMPLEMENTATION_PLAN.md and move to the next task.
 ```
+Add additional guardrails to my Ralph build prompt at ~/Projects/compatibility-app/PROMPT_build.md
+
+Append these new numbered guardrails after the existing ones (continue the 9s pattern):
+
+1. CRITICAL: Before implementing ANY feature, use at minimum 3 subagents to search for existing implementations. Report findings before writing code.
+
+2. MANDATORY: Run 'npx eslint src/' before every commit. Fix all errors. No commits with lint errors.
+
+3. ONE task per iteration. After completing ONE task, commit and exit. Do not continue to other tasks.
+
+4. NEVER create placeholder or stub implementations. If you cannot fully implement a feature, document it in IMPLEMENTATION_PLAN.md and move to the next task.
+
+Show me the updated guardrails section of the file.
+```
+
+---
 
 ### Regenerating the Plan
 
-Regenerate when:
-- Ralph implements wrong things repeatedly
-- Plan is cluttered with completed items
-- You've changed specifications
-- You're confused about project state
+🤖 **Claude Desktop Can Help Prepare**
 
-```bash
-rm IMPLEMENTATION_PLAN.md
-./loop.sh plan 3
+Copy and paste this prompt into Claude Desktop:
+
 ```
+Delete the implementation plan for my compatibility app to prepare for regeneration:
+
+rm ~/Projects/compatibility-app/IMPLEMENTATION_PLAN.md
+
+Confirm the file was deleted. 
+
+Remind me that I need to:
+1. Enter the Docker sandbox: ./run-ralph.sh
+2. Run planning mode: ./loop.sh plan 3
+```
+
+Then you (human) must run the planning loop in Docker.
+
+---
 
 ### Escape Hatches
 
@@ -1768,6 +1003,8 @@ rm IMPLEMENTATION_PLAN.md
 ### Docker Issues
 
 **"Cannot connect to Docker daemon"**
+
+👤 **Human Required**
 ```bash
 # Start Docker Desktop from Applications
 open -a Docker
@@ -1776,143 +1013,162 @@ open -a Docker
 docker info
 ```
 
+---
+
 **"Image not found: ralph-sandbox"**
-```bash
-# Rebuild the image
-cd ~/ralph-docker
-docker build -t ralph-sandbox .
+
+🤖 **Claude Desktop Can Do This**
+
 ```
+Rebuild the Ralph Docker image.
+
+Navigate to ~/ralph-docker and run docker build with tag ralph-sandbox.
+
+Show me the build output and confirm success.
+```
+
+---
 
 **"Permission denied" on project files**
-```bash
-# Files created by Docker may have wrong permissions
-# Outside container, fix with:
-sudo chown -R $(whoami) ~/Projects/compatibility-app
+
+🤖 **Claude Desktop Can Do This**
+
+```
+Fix file permissions for my compatibility app project.
+
+Run: sudo chown -R $(whoami) ~/Projects/compatibility-app
+
+Note: I may need to enter my password.
+
+Confirm the permissions are fixed by listing the directory.
 ```
 
-**Container can't push to GitHub**
-```bash
-# Inside container, configure git credentials
-git config --global credential.helper store
-
-# On first push, enter your GitHub username and Personal Access Token
-# The container will remember them for the session
-```
+---
 
 ### Claude Issues
 
 **"ANTHROPIC_API_KEY not set"**
-```bash
-# Set it for current session
-export ANTHROPIC_API_KEY="sk-ant-your-key"
 
-# Verify
-echo $ANTHROPIC_API_KEY
+🤖 **Claude Desktop Can Do This**
 
-# Make sure it's passed to Docker (run-ralph.sh does this automatically)
 ```
+Check if my Anthropic API key is set in my shell configuration.
+
+1. Check if ANTHROPIC_API_KEY exists in ~/.zshrc
+2. Show me the current value of the environment variable (first 12 chars only)
+3. If not set, remind me that I need to add it
+
+Source the zshrc file to reload if needed.
+```
+
+---
 
 **"Rate limited" or API errors**
-```bash
-# Wait and retry
-sleep 60
-./loop.sh 5
 
-# Check your usage at console.anthropic.com
-```
+Wait 60 seconds and retry. Check your usage at [console.anthropic.com](https://console.anthropic.com).
+
+---
 
 **"Insufficient credits" or payment errors**
+
+👤 **Human Required**
+
 1. Go to [console.anthropic.com](https://console.anthropic.com)
 2. Check **Billing** section
 3. Add payment method or credits
 
-**Claude seems stuck or unresponsive**
-```bash
-# Stop with Ctrl+C
-# Test Claude directly
-claude -p "Say hello"
-
-# If that works, restart the loop
-./loop.sh 5
-
-# If not, check API key and internet connection
-```
+---
 
 ### Git Issues
 
-**"Not a git repository"**
-```bash
-git init
-git add -A
-git commit -m "Initial commit"
-```
-
 **"Push rejected" or "Authentication failed"**
-```bash
-# Check remote is set
-git remote -v
 
-# If not set, add it
-git remote add origin https://github.com/YOUR-USERNAME/compatibility-app.git
+🤖 **Claude Desktop Can Help Diagnose**
 
-# Push with credentials
-git push -u origin main
-# Enter: username = GitHub username
-# Enter: password = Personal Access Token (NOT your GitHub password)
 ```
+Diagnose git remote issues for ~/Projects/compatibility-app
+
+1. Check if remote origin is configured: git remote -v
+2. Check current branch: git branch
+3. Check if there are commits to push: git status
+
+If the remote isn't configured, show me the command to add it (I'll need to fill in my GitHub username).
+
+If authentication is the issue, remind me to use my Personal Access Token (not password) when prompted.
+```
+
+---
 
 **"Merge conflicts"**
-```bash
-# See what's conflicted
-git status
 
-# Option A: Accept all incoming changes
-git checkout --theirs .
-git add -A
-git commit -m "Resolve conflicts, accept theirs"
+🤖 **Claude Desktop Can Do This**
 
-# Option B: Manually edit conflicted files, then
-git add -A
-git commit -m "Resolve merge conflicts"
 ```
+Help me resolve git conflicts in ~/Projects/compatibility-app
+
+1. Show me git status to see conflicted files
+2. For each conflicted file, show me the conflict markers
+3. Ask me which version I want to keep (theirs, mine, or let me see both)
+4. After I decide, stage the resolved files and create a commit
+
+Start by showing me the current status.
+```
+
+---
 
 ### Loop Issues
 
 **Ralph keeps doing the same task**
-```bash
-# The plan may be stuck - regenerate it
-rm IMPLEMENTATION_PLAN.md
-./loop.sh plan 3
+
+🤖 **Claude Desktop Can Do This**
+
 ```
+The Ralph loop seems stuck. Help me diagnose and fix it.
+
+1. Show me the current IMPLEMENTATION_PLAN.md from ~/Projects/compatibility-app
+2. Check if the "stuck" task is actually marked as complete
+3. If not marked complete but code exists, update the plan to mark it done
+4. If the plan looks corrupted, delete it (I'll regenerate in Docker)
+
+Show me what you find.
+```
+
+---
 
 **Ralph creates broken code**
-```bash
-# Revert last commit
-git reset --hard HEAD~1
 
-# Add more specific guardrails to PROMPT_build.md
-# Then retry
-./loop.sh 5
+🤖 **Claude Desktop Can Do This**
+
 ```
+Ralph created broken code. Help me revert and prepare to retry.
+
+In ~/Projects/compatibility-app:
+
+1. Show me the last 5 commits
+2. Revert to the commit before the broken one: git reset --hard HEAD~1
+3. Force push to update GitHub: git push --force
+4. Show me the current state of the code
+
+Remind me to add more specific guardrails to PROMPT_build.md before retrying.
+```
+
+---
 
 **Loop exits immediately**
-```bash
-# Check prompt file exists
-ls -la PROMPT_build.md
-cat PROMPT_build.md
 
-# Check for syntax errors in loop.sh
-bash -n loop.sh
+🤖 **Claude Desktop Can Do This**
 
-# Run Claude manually to test
-cat PROMPT_build.md | claude -p --verbose
 ```
+The Ralph loop exits immediately. Help me diagnose.
 
-**"Command not found: claude" in Docker**
-```bash
-# Rebuild the Docker image
-cd ~/ralph-docker
-docker build -t ralph-sandbox .
+Check ~/Projects/compatibility-app:
+
+1. Verify PROMPT_build.md exists and has content
+2. Verify loop.sh exists and is executable
+3. Check loop.sh for syntax errors: bash -n loop.sh
+4. Verify we're in a git repository
+
+Report what you find and suggest fixes.
 ```
 
 ---
@@ -1948,6 +1204,7 @@ compatibility-app/
 ```bash
 # ═══════════════════════════════════════════
 # DOCKER COMMANDS (run from project directory)
+# Human required - Claude Desktop cannot run Docker
 # ═══════════════════════════════════════════
 
 # Enter sandbox (interactive shell)
@@ -1962,6 +1219,7 @@ compatibility-app/
 
 # ═══════════════════════════════════════════
 # INSIDE DOCKER CONTAINER
+# Human required - interactive session
 # ═══════════════════════════════════════════
 
 # Planning mode
@@ -1976,7 +1234,7 @@ compatibility-app/
 exit
 
 # ═══════════════════════════════════════════
-# ON YOUR MAC (outside Docker)
+# ON YOUR MAC (Claude Desktop can help)
 # ═══════════════════════════════════════════
 
 # View your app
@@ -1988,11 +1246,8 @@ git log --oneline -20
 cat IMPLEMENTATION_PLAN.md
 
 # ═══════════════════════════════════════════
-# EMERGENCY COMMANDS
+# EMERGENCY COMMANDS (Claude Desktop can help)
 # ═══════════════════════════════════════════
-
-# Stop loop
-Ctrl+C
 
 # Revert uncommitted changes
 git reset --hard
@@ -2000,9 +1255,25 @@ git reset --hard
 # Undo last commit
 git reset --hard HEAD~1
 
-# Regenerate plan
-rm IMPLEMENTATION_PLAN.md && ./loop.sh plan 3
+# Regenerate plan (delete then run planning in Docker)
+rm IMPLEMENTATION_PLAN.md
 ```
+
+### What Claude Desktop Can vs Cannot Do
+
+| Task | Claude Desktop? | Why |
+|------|-----------------|-----|
+| Install packages via brew/npm | ✅ Yes | Shell commands |
+| Create/edit project files | ✅ Yes | File operations |
+| Run git commands | ✅ Yes | Shell commands |
+| Configure shell/git settings | ✅ Yes | File/shell operations |
+| Build Docker images | ✅ Yes | Shell commands |
+| Create accounts (GitHub, Anthropic, Netlify) | ❌ No | CAPTCHA, email verification |
+| Get API keys/tokens | ❌ No | Requires authenticated login |
+| Authorize OAuth connections | ❌ No | Interactive browser flow |
+| Install .dmg applications | ❌ No | macOS permission dialogs |
+| Run interactive Docker sessions | ❌ No | Cannot control persistent terminal |
+| Run the Ralph loop | ❌ No | Requires interactive Docker |
 
 ### Key Terminology
 
@@ -2034,62 +1305,57 @@ rm IMPLEMENTATION_PLAN.md && ./loop.sh plan 3
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  1. PREREQUISITES                                           │
-│     Install: Homebrew, Node.js, Claude Code, Git, Docker    │
-│     Configure: API key, Git identity, GitHub auth, Docker   │
+│     🤖 Install: Node.js, Git, Claude CLI (via Claude)       │
+│     👤 Create: Anthropic account, get API key               │
+│     🤖 Configure: API key, Git identity (via Claude)        │
+│     👤 Create: GitHub account, Personal Access Token        │
+│     👤 Install: Docker Desktop                              │
+│     🤖 Build: Docker image (via Claude)                     │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  2. PROJECT SETUP                                           │
-│     Create: directories, loop.sh, prompts, AGENTS.md        │
-│     Create: initial src files (index.html, styles, scripts) │
-│     Push: to private GitHub repository                      │
+│     🤖 Create: full project structure (via Claude)          │
+│     👤 Create: GitHub repository                            │
+│     🤖 Connect: local repo to GitHub (via Claude)           │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  3. DEFINE REQUIREMENTS                                     │
-│     Write: specs/*.md (one per topic of concern)            │
-│     Include: requirements + acceptance criteria             │
+│     🤖 Write: all spec files (via Claude)                   │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  4. PLANNING MODE                                           │
-│     Run: ./run-ralph.sh plan 3                              │
-│     Output: IMPLEMENTATION_PLAN.md                          │
-│     Review: regenerate if wrong                             │
+│     👤 Start: Docker Desktop                                │
+│     👤 Run: ./run-ralph.sh then ./loop.sh plan 3            │
+│     👤 Review: IMPLEMENTATION_PLAN.md                       │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  5. BUILDING MODE                                           │
-│     Run: ./run-ralph.sh 20                                  │
-│     Each iteration: select → implement → test → commit      │
-│     Auto-pushes to GitHub after each commit                 │
+│     👤 Run: ./loop.sh 20 (in Docker)                        │
+│     🤖 Monitor: progress via Claude                         │
+│     🤖 Tune: add guardrails via Claude                      │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  6. DEPLOYMENT                                              │
-│     Connect: Netlify to GitHub repository                   │
-│     Configure: publish directory = src                      │
-│     Auto-deploys: on every push to main                     │
+│     👤 Create: Netlify account                              │
+│     👤 Connect: GitHub repository                           │
+│     👤 Configure: publish directory = src                   │
+│     Auto-deploys on every push                              │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  7. MONITOR & TUNE                                          │
-│     Watch: for repeated failures                            │
-│     Add: guardrails to prompts                              │
-│     Regenerate: plan when stale                             │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│  8. COMPLETE                                                │
-│     All tasks done, app works as specified                  │
-│     Live at: your-site.netlify.app                          │
+│  7. COMPLETE                                                │
+│     App works, live at your-site.netlify.app                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -2101,68 +1367,456 @@ Use this checklist to track your progress:
 
 ```
 □ Prerequisites
-  □ Homebrew installed
-  □ Node.js installed (v18+)
-  □ Claude Code CLI installed
-  □ Anthropic account created
-  □ API key obtained and set in shell
-  □ Spending limit configured
-  □ Git installed and configured
-  □ GitHub account created
-  □ Personal Access Token created
-  □ Git credential helper configured
-  □ Docker Desktop installed and running
-  □ ralph-sandbox Docker image built
-  □ All prerequisites verified (check script)
+  □ 👤 Homebrew installed
+  □ 🤖 Node.js installed (v18+)
+  □ 🤖 Git installed
+  □ 🤖 Claude Code CLI installed
+  □ 👤 Anthropic account created
+  □ 👤 API key obtained
+  □ 🤖 API key set in shell
+  □ 👤 Spending limit configured
+  □ 🤖 Git identity configured
+  □ 👤 GitHub account created
+  □ 👤 Personal Access Token created
+  □ 🤖 Git credential helper configured
+  □ 👤 Docker Desktop installed and running
+  □ 🤖 ralph-sandbox Docker image built
+  □ 🤖 All prerequisites verified
 
 □ Project Setup
-  □ Project directory created
-  □ Git repository initialized
-  □ GitHub repository created (private)
-  □ Local repo connected to GitHub
-  □ Ralph directory structure created
-  □ Initial src files created (index.html, styles.css, scripts.js)
-  □ loop.sh created and executable
-  □ run-ralph.sh created and executable
-  □ AGENTS.md populated
-  □ PROMPT_plan.md created
-  □ PROMPT_build.md created
-  □ Setup committed and pushed
+  □ 🤖 Project structure created
+  □ 🤖 Initial src files created
+  □ 🤖 loop.sh and run-ralph.sh created
+  □ 🤖 AGENTS.md and prompts created
+  □ 👤 GitHub repository created
+  □ 🤖 Local repo connected to GitHub
 
 □ Requirements
-  □ JTBD identified
-  □ Topics of concern defined
-  □ specs/room-management.md written
-  □ specs/preference-system.md written
-  □ specs/realtime-sync.md written
-  □ specs/scoring.md written
-  □ specs/user-interface.md written
-  □ Specs committed and pushed
+  □ 🤖 All 5 spec files written
+  □ 🤖 Specs committed and pushed
 
 □ Planning
-  □ Entered Docker sandbox
-  □ Ran ./loop.sh plan 3
-  □ Reviewed IMPLEMENTATION_PLAN.md
-  □ Plan looks correct (or regenerated)
+  □ 👤 Docker Desktop running
+  □ 👤 Entered Docker sandbox
+  □ 👤 Ran ./loop.sh plan 3
+  □ 👤 Reviewed IMPLEMENTATION_PLAN.md
 
 □ Building
-  □ Started ./loop.sh [iterations]
-  □ Monitoring progress
-  □ Adding guardrails as needed
-  □ Regenerating plan when stuck
+  □ 👤 Ran ./loop.sh with iterations
+  □ 🤖 Monitored progress
+  □ 🤖 Added guardrails as needed
 
 □ Deployment
-  □ Netlify account created
-  □ Repository connected to Netlify
-  □ Build settings configured (publish: src)
-  □ First deploy successful
-  □ Auto-deploy working on push
-  □ (Optional) Custom domain configured
+  □ 👤 Netlify account created
+  □ 👤 Repository connected to Netlify
+  □ 👤 Build settings configured
+  □ Site is live
 
-□ Complete
-  □ All tasks in plan marked done
-  □ App works as specified
-  □ Live site accessible
+□ Complete!
+```
+
+---
+
+## All Claude Desktop Prompts (Copy-Paste Reference)
+
+For convenience, here are all the Claude Desktop prompts from this tutorial in one place:
+
+### Prerequisites Prompts
+
+**Install Node.js and Git:**
+```
+Install Node.js and Git on my Mac using Homebrew. After installation, verify both are working by checking their versions. Show me the output of the version checks.
+```
+
+**Install Claude Code CLI:**
+```
+Install the Claude Code CLI globally using npm. After installation, verify it's working by checking the version. Show me the output.
+```
+
+**Set API Key (replace with your key):**
+```
+Add my Anthropic API key to my shell configuration so it persists across terminal sessions. My API key is: sk-ant-xxxxx (replace with actual key)
+
+Add it to ~/.zshrc and reload the shell configuration. Then verify the key is set by echoing the first 15 characters (for security, don't show the full key).
+```
+
+**Configure Git Identity (replace with your info):**
+```
+Configure Git with my identity:
+- Name: Your Full Name
+- Email: your.email@example.com
+
+Also enable the macOS Keychain credential helper so Git remembers my GitHub credentials. Show me the final git config to confirm.
+```
+
+**Build Docker Image:**
+```
+Create a Docker image for the Ralph Wiggum development sandbox. 
+
+Create a directory at ~/ralph-docker and inside it create a Dockerfile with these specifications:
+- Base image: ubuntu:24.04
+- Install: curl, git, ca-certificates, gnupg
+- Install Node.js 20.x from NodeSource
+- Install globally via npm: @anthropic-ai/claude-code, serve, eslint, prettier
+- Create a non-root user called "ralph"
+- Set working directory to /workspace
+- Configure git with name "Ralph Wiggum" and email "ralph@example.com"
+- Set default branch to main
+
+After creating the Dockerfile, build the image with the tag "ralph-sandbox". Show me the build output and confirm success.
+```
+
+**Verify Prerequisites:**
+```
+Create a prerequisites verification script at ~/check-ralph-prereqs.sh that checks for:
+- Homebrew installed
+- Node.js installed (show version)
+- npm installed (show version)
+- Git installed (show version)
+- Docker installed (show version)
+- Claude CLI installed (show version)
+- ANTHROPIC_API_KEY environment variable set (show first 12 chars only)
+- Docker daemon running
+- ralph-sandbox Docker image exists
+- Git credential helper configured
+
+Use colored output (green checkmarks for pass, red X for fail).
+Make the script executable and run it. Show me the results.
+```
+
+### Project Setup Prompt
+
+**Create Full Project Structure:**
+```
+Create a new project for a Partner Compatibility Rating App at ~/Projects/compatibility-app with the complete Ralph Wiggum structure.
+
+Create these directories:
+- specs/
+- src/
+- src/lib/
+
+Create these files with appropriate content:
+
+1. README.md - Brief project description
+
+2. src/index.html - Basic HTML5 boilerplate with:
+   - Title: "Compatibility App"
+   - Link to styles.css
+   - A div with id="app" containing an h1 and loading message
+   - Script tag for scripts.js
+
+3. src/styles.css - Basic styles with:
+   - Box-sizing border-box reset
+   - System font stack
+   - Light gray background (#F9FAFB)
+   - Centered #app container with max-width 600px
+   - Purple (#7C3AED) h1 color
+
+4. src/scripts.js - Basic app scaffold with:
+   - IIFE wrapper with 'use strict'
+   - Console log on load
+   - Empty state object for room, partnerId, ratings
+   - Init function that runs on DOMContentLoaded
+
+5. AGENTS.md - Operational guide containing:
+   - Project overview (Partner Compatibility Rating App)
+   - Build & run instructions (npx serve src -p 3000)
+   - Validation commands (eslint, prettier)
+   - Tech stack (vanilla HTML/CSS/JS, localStorage)
+   - Project structure diagram
+   - Codebase patterns (state management, DOM updates, naming conventions)
+   - Placeholder for known issues
+
+6. IMPLEMENTATION_PLAN.md - Empty file (Ralph will generate this)
+
+7. loop.sh - The Ralph loop script that:
+   - Parses arguments for plan/build mode and max iterations
+   - Shows colored header with mode, prompt file, branch, iteration limit
+   - Validates: prompt file exists, git repo initialized, claude CLI available, API key set
+   - Main loop that: runs claude with -p --dangerously-skip-permissions --output-format=stream-json --model opus --verbose
+   - Pushes to git after each iteration
+   - Shows timing information
+   - Make it executable
+
+8. run-ralph.sh - Docker run helper that:
+   - Checks Docker is running
+   - Checks API key is set
+   - Checks ralph-sandbox image exists
+   - Mounts project directory to /workspace
+   - Passes ANTHROPIC_API_KEY to container
+   - Forwards port 3000
+   - Supports: no args (interactive shell), "plan N" (planning), "build N" or just "N" (building)
+   - Shows helpful usage instructions
+   - Make it executable
+
+9. PROMPT_plan.md - Planning mode prompt that instructs Claude to:
+   - Study specs/* with parallel Sonnet subagents
+   - Study existing IMPLEMENTATION_PLAN.md if present
+   - Study src/lib/* for shared utilities
+   - Compare specs against src/* code
+   - Create/update IMPLEMENTATION_PLAN.md with prioritized tasks
+   - Use Ultrathink for analysis
+   - NOT implement anything, only plan
+   - Include the ultimate goal: partner compatibility rating app with rooms, sliders, real-time sync, scores
+
+10. PROMPT_build.md - Building mode prompt that instructs Claude to:
+    - Study specs/* with parallel Sonnet subagents
+    - Study IMPLEMENTATION_PLAN.md
+    - Choose most important task
+    - Search codebase before implementing (don't assume)
+    - Use up to 500 Sonnet subagents for reads, 1 for builds
+    - Use Opus subagents for complex reasoning
+    - Run tests after implementing
+    - Update IMPLEMENTATION_PLAN.md with discoveries
+    - Git add, commit, and push when tests pass
+    - Include numbered guardrails (99999, 999999, etc.) for:
+      - Capturing the why in documentation
+      - Single sources of truth
+      - Creating git tags on success
+      - Adding debug logging if needed
+      - Keeping IMPLEMENTATION_PLAN.md current
+      - Updating AGENTS.md with operational learnings (keep brief)
+      - Documenting bugs even if unrelated
+      - Implementing completely (no placeholders)
+      - Cleaning completed items from plan
+      - Fixing spec inconsistencies with Opus subagent
+      - Keeping AGENTS.md operational only
+
+Initialize a git repository and create the initial commit with message "Setup Ralph Wiggum project structure".
+
+Show me the final directory structure and confirm all files were created.
+```
+
+**Connect to GitHub (replace YOUR-USERNAME):**
+```
+Connect my local git repository at ~/Projects/compatibility-app to GitHub.
+
+Add the remote origin: https://github.com/YOUR-USERNAME/compatibility-app.git
+
+Push the main branch to GitHub with upstream tracking.
+
+Note: If this is the first push, I may be prompted for GitHub credentials. My username is YOUR-USERNAME and I'll enter my Personal Access Token when prompted.
+
+Show me the output of the push and confirm the remote is configured correctly with `git remote -v`.
+```
+
+### Requirements Prompt
+
+**Create All Spec Files:**
+```
+Create all specification files for the Partner Compatibility Rating App in ~/Projects/compatibility-app/specs/
+
+Create these 5 spec files with detailed requirements and acceptance criteria:
+
+1. specs/room-management.md
+   Overview: Users create or join rooms using short codes
+   Requirements for:
+   - Room Creation: 6-char alphanumeric codes (exclude confusing chars like 0/O, 1/l), creator is "Partner 1", 24hr expiration
+   - Room Joining: input field, validation, joiner is "Partner 2", max 2 users, error handling
+   - Room State: localStorage persistence, unique partner IDs, handle refresh, "waiting for partner" state
+   - Room Lifecycle: Active, Waiting, Expired, Complete states
+   Acceptance criteria as checkboxes
+
+2. specs/preference-system.md
+   Overview: Categories of preferences with 1-10 sliders
+   Requirements for:
+   - 6 Categories with 5 items each:
+     * Communication (conflict resolution, love language, check-ins, honesty style, venting vs solutions)
+     * Lifestyle (early bird/night owl, tidiness, routine/spontaneity, introvert/extrovert, work-life)
+     * Adventure (new foods, travel, risk tolerance, planning, exploration)
+     * Finance (saving/spending, separate/joint, experiences/material, debt comfort, budgeting)
+     * Family (children, extended family, roles, holidays, pets)
+     * Intimacy (physical affection, quality time, emotional expression, reassurance, conversation depth)
+   - Slider Interface: range 1-10, show value, endpoint labels, smooth animation, default to 5
+   - Rating Flow: sequential categories, complete all before next, can go back, progress indicator, partner ratings hidden until both complete
+   Acceptance criteria as checkboxes
+
+3. specs/realtime-sync.md
+   Overview: Both partners see updates in real-time
+   Requirements for:
+   - Sync Mechanism: poll-based (2 sec), localStorage for same-browser testing
+   - Demo/Local Testing: storage events for cross-tab sync
+   - Data to Sync: presence, category completion, ratings (after mutual completion), progress %
+   - Connection Status: online/away indicator, 30 sec timeout
+   - State Management: single source of truth, key structure room:{code}:state, timestamps, last-write-wins
+   Acceptance criteria as checkboxes
+
+4. specs/scoring.md
+   Overview: Calculate and display compatibility scores
+   Requirements for:
+   - Scoring Algorithm:
+     * Per-item: 10 - |rating1 - rating2| (max 10, min 1)
+     * Per-category: average of items as percentage
+     * Overall: average of categories as percentage
+   - Score Display: percentage with decimal, color coding (green 80%+, yellow 50-79%, red <50%), bar chart
+   - Item Comparison: side-by-side ratings, highlight matches (within 2), highlight mismatches (5+ apart)
+   - Progressive Reveal: show category after both complete, update overall as you go
+   Acceptance criteria as checkboxes
+
+5. specs/user-interface.md
+   Overview: Clean, mobile-first interface
+   Requirements for:
+   - Screen States: Landing (create/join), Waiting (code display, copy button), Rating (category, progress, slider, nav), Results (score, breakdown, details, share)
+   - Layout: mobile-first 320px min, single column, centered 600px max, 44px touch targets
+   - Visual Design: purple primary #7C3AED, green #10B981, amber #F59E0B, red #EF4444, gray background #F9FAFB
+   - Animations: smooth transitions, slider animation, progress fills, score reveals
+   - Accessibility: semantic HTML, ARIA labels, keyboard nav, focus indicators, color not sole indicator
+   - Error States: inline messages, toast notifications, field highlighting, recovery actions
+   Acceptance criteria as checkboxes
+
+After creating all specs, commit them with message "Add requirement specifications" and push to GitHub.
+
+Show me a summary of each spec file created.
+```
+
+### Monitoring Prompts
+
+**Start Development Server:**
+```
+Start a local development server for my compatibility app at ~/Projects/compatibility-app
+
+Run: npx serve src -p 3000
+
+Tell me when it's running and remind me to open http://localhost:3000 in my browser.
+```
+
+**Check Progress:**
+```
+Show me the recent git activity for my compatibility app at ~/Projects/compatibility-app
+
+1. Show the last 15 commits (oneline format)
+2. Show the current contents of IMPLEMENTATION_PLAN.md
+3. Count how many tasks are marked complete vs incomplete
+
+Give me a summary of the project's progress.
+```
+
+**Add Guardrails:**
+```
+Add additional guardrails to my Ralph build prompt at ~/Projects/compatibility-app/PROMPT_build.md
+
+Append these new numbered guardrails after the existing ones (continue the 9s pattern):
+
+1. CRITICAL: Before implementing ANY feature, use at minimum 3 subagents to search for existing implementations. Report findings before writing code.
+
+2. MANDATORY: Run 'npx eslint src/' before every commit. Fix all errors. No commits with lint errors.
+
+3. ONE task per iteration. After completing ONE task, commit and exit. Do not continue to other tasks.
+
+4. NEVER create placeholder or stub implementations. If you cannot fully implement a feature, document it in IMPLEMENTATION_PLAN.md and move to the next task.
+
+Show me the updated guardrails section of the file.
+```
+
+**Prepare Plan Regeneration:**
+```
+Delete the implementation plan for my compatibility app to prepare for regeneration:
+
+rm ~/Projects/compatibility-app/IMPLEMENTATION_PLAN.md
+
+Confirm the file was deleted. 
+
+Remind me that I need to:
+1. Enter the Docker sandbox: ./run-ralph.sh
+2. Run planning mode: ./loop.sh plan 3
+```
+
+### Troubleshooting Prompts
+
+**Rebuild Docker Image:**
+```
+Rebuild the Ralph Docker image.
+
+Navigate to ~/ralph-docker and run docker build with tag ralph-sandbox.
+
+Show me the build output and confirm success.
+```
+
+**Fix File Permissions:**
+```
+Fix file permissions for my compatibility app project.
+
+Run: sudo chown -R $(whoami) ~/Projects/compatibility-app
+
+Note: I may need to enter my password.
+
+Confirm the permissions are fixed by listing the directory.
+```
+
+**Check API Key:**
+```
+Check if my Anthropic API key is set in my shell configuration.
+
+1. Check if ANTHROPIC_API_KEY exists in ~/.zshrc
+2. Show me the current value of the environment variable (first 12 chars only)
+3. If not set, remind me that I need to add it
+
+Source the zshrc file to reload if needed.
+```
+
+**Diagnose Git Issues:**
+```
+Diagnose git remote issues for ~/Projects/compatibility-app
+
+1. Check if remote origin is configured: git remote -v
+2. Check current branch: git branch
+3. Check if there are commits to push: git status
+
+If the remote isn't configured, show me the command to add it (I'll need to fill in my GitHub username).
+
+If authentication is the issue, remind me to use my Personal Access Token (not password) when prompted.
+```
+
+**Resolve Git Conflicts:**
+```
+Help me resolve git conflicts in ~/Projects/compatibility-app
+
+1. Show me git status to see conflicted files
+2. For each conflicted file, show me the conflict markers
+3. Ask me which version I want to keep (theirs, mine, or let me see both)
+4. After I decide, stage the resolved files and create a commit
+
+Start by showing me the current status.
+```
+
+**Diagnose Stuck Loop:**
+```
+The Ralph loop seems stuck. Help me diagnose and fix it.
+
+1. Show me the current IMPLEMENTATION_PLAN.md from ~/Projects/compatibility-app
+2. Check if the "stuck" task is actually marked as complete
+3. If not marked complete but code exists, update the plan to mark it done
+4. If the plan looks corrupted, delete it (I'll regenerate in Docker)
+
+Show me what you find.
+```
+
+**Revert Broken Code:**
+```
+Ralph created broken code. Help me revert and prepare to retry.
+
+In ~/Projects/compatibility-app:
+
+1. Show me the last 5 commits
+2. Revert to the commit before the broken one: git reset --hard HEAD~1
+3. Force push to update GitHub: git push --force
+4. Show me the current state of the code
+
+Remind me to add more specific guardrails to PROMPT_build.md before retrying.
+```
+
+**Diagnose Loop Exit:**
+```
+The Ralph loop exits immediately. Help me diagnose.
+
+Check ~/Projects/compatibility-app:
+
+1. Verify PROMPT_build.md exists and has content
+2. Verify loop.sh exists and is executable
+3. Check loop.sh for syntax errors: bash -n loop.sh
+4. Verify we're in a git repository
+
+Report what you find and suggest fixes.
 ```
 
 ---
